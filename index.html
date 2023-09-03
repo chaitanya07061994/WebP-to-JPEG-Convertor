@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebP to JPEG Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url(https://media.istockphoto.com/id/508655038/photo/irrigation-with-tube-well.jpg?s=2048x2048&w=is&k=20&c=ghBUonYmWVMuhQEfbV5_-QpZdfSYrTN_B3P3MaiJC1A=); /* Replace 'background.jpg' with your background image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            text-align: center;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+        h1 {
+            color: #333;
+        }
+        #imageInput {
+            display: none;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #downloadLink {
+            display: none;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WebP to JPEG Converter</h1>
+        <input type="file" id="imageInput" accept=".webp" onchange="convertToJPEG()">
+        <label for="imageInput" class="btn">Upload WebP Image</label>
+        <p>Choose a WebP image to convert to JPEG.</p>
+        <div id="conversionResult">
+            <a id="downloadLink" class="btn" download="converted.jpg">Download JPEG</a>
+        </div>
+    </div>
+
+    <script>
+        function convertToJPEG() {
+            const input = document.getElementById('imageInput');
+            const downloadLink = document.getElementById('downloadLink');
+            const conversionResult = document.getElementById('conversionResult');
+
+            if (input.files.length === 0) {
+                alert('Please select a WebP image to convert.');
+                return;
+            }
+
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        downloadLink.href = url;
+                        downloadLink.style.display = 'inline-block';
+                    }, 'image/jpeg', 0.9); // 0.9 is the JPEG quality (adjust as needed)
+                };
+            };
+
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
